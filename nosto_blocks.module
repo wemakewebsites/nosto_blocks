@@ -87,34 +87,43 @@ function nosto_blocks_external_dashboard_link(){
 function nosto_blocks_get_slot_id_list() 
 {    
 	$list_of_nosto_slot_ids = variable_get('nosto_block_list', '');
-	return $list_of_nosto_slot_ids ? explode("\n", $list_of_nosto_slot_ids) : array();
+
+	// deal with having none by having an 'example' id. This is because hook_block_info can't handle a null/empty response
+	return !empty($list_of_nosto_slot_ids) ? explode("\r", $list_of_nosto_slot_ids) : array('example');
 }
 
 function nosto_blocks_block_info() 
 {    
+	$blocks = array();
 	foreach(nosto_blocks_get_slot_id_list() as $nosto_slot_id) {
+		$nosto_slot_id = trim($nosto_slot_id);
 		// build a lst of 
-		$blocks['nosto_' . $nosto_slot_id] = array(
+		$blocks['nosto_' . trim($nosto_slot_id)] = array(
 			// info: The name of the block.
 			'info' => t('Nosto Slot: ' . $nosto_slot_id),
 		);		
 	}
-
-	return $blocks;
+	print_r($blocks);
+	return (count($blocks) > 0) ? $blocks : null;
 }
 
 function nosto_blocks_block_view($delta = '') 
 {
+
 	if (substr($delta, 0, 6) == "nosto_") {
 		// remove nosto_ part of the array 
 		$slot_id = substr($delta, 6);
+
+		print $slot_id;
+
+		$block = array();
 
 		//No title
 		$block['subject'] = null;;
 
 		// content should be something like:
 		// <div class="nosto_element" id="recently-viewed"></div> 
-		$block['content'] = '<div class="nosto_element" id="' . $slot_id . '"></div>';
+		$block['content'] = '<div class="nosto_element" id="' . trim($slot_id) . '"></div>';
 
 		return $block;
 	}

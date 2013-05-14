@@ -14,7 +14,7 @@ function nosto_blocks_admin_form($form, &$form_state) {
   $form['nosto_block_list'] = array( 
     '#type' => 'textarea',
     '#title' => t('List of nosto block IDs'), 
-    '#description' => t("Enter a list of your nosto block IDs, one on each line. You can set up your blocks and get their IDs on this page !nosto_settings. Once you've added your slot IDs here they will be available on the !block_settings.",
+    '#description' => t("Enter a list of your Nosto slot IDs, one on each line. You can set up your blocks and get their IDs on this page !nosto_settings. Once you've added your slot IDs here they will be available on the !block_settings.",
     	 array(
     	 	'!nosto_settings' => l(t('nosto tagging settings'), 'admin/config/services/nostotagging'), 
 	    	'!block_settings' => l(t('blocks page'), 'admin/config/services/nostotagging')
