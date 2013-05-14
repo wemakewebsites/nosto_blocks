@@ -1,5 +1,5 @@
 name = Nosto Blocks
-description = Easily create blocks for each of your Nosto recommendation slots
+description = Easily set up Nosto slots as blocks on a Drupal site
 version = 7.x-1.0-dev
 core = 7.x
 php = 5.0
