@@ -103,7 +103,6 @@ function nosto_blocks_block_info()
 			'info' => t('Nosto Slot: ' . $nosto_slot_id),
 		);		
 	}
-	print_r($blocks);
 	return (count($blocks) > 0) ? $blocks : null;
 }
 
