@@ -1,0 +1,122 @@
+<?php
+
+/**
+ * Implements hook_help().
+ */
+function nosto_blocks_help($path, $arg) {
+  switch ($path) {
+    case 'admin/config/services/nostotagging':
+    case 'admin/config/services/nostotagging/settings':
+      return '<p>' . t('Use this page to configure the Nosto block') . '</p>';
+
+  }
+} 
+ 
+/**
+ * Implements hook_permission().
+ */
+function nosto_blocks_permission() {
+  return array(
+    'administer newscred' => array(
+      'title' => t('Administer Nosto Blocks'),
+      'restrict access' => TRUE,
+    ),
+  );
+}
+
+/**
+ * Implementeds hook_menu().
+ */
+function nosto_blocks_menu() {
+	return array(
+
+		'admin/config/structure/nostoblocks' => array(
+			'type' => MENU_NORMAL_ITEM,
+			'title' => 'Nosto blocks',
+			'description' => 'Nosto block configuration',
+			'access arguments' => array('Administer Nosto Blocks'),
+			'page callback' => 'drupal_get_form',
+			'page arguments' => array('nosto_blocks_admin_form'),
+			'file' => 'nosto_blocks.admin.inc',
+		),
+		
+		// 'aadmin/config/structure/nostoblocks' => array(
+		// 	'type' => MENU_DEFAULT_LOCAL_TASK,
+		// 	'title' => 'Settings',
+		// 	'weight' => 10,
+		// ),
+
+		// 'admin/config/structure/nostoblocks/edit' => array(
+		// 	'type' => MENU_LOCAL_TASK,
+		// 	'title' => 'Content Type',
+		// 	'description' => 'Configure target content type for NewsCred articles.',
+		// 	'access arguments' => array('Administer Nosto Blocks'),
+		// 	'page callback' => 'drupal_get_form',
+		// 	'page arguments' => array('nosto_blocks_content_admin_form'),
+		// 	'file' => 'newscred.admin.inc',
+		// 	'weight' => 20,
+		// ),
+		
+  );
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function nosto_blocks_requirements($phase) {
+  $requirements = array();
+  if ($phase == 'runtime') {
+    if (!variable_get(COMMERCE_NOSTO_TAGGING_CONFIG_KEY_ACCOUNT_NAME)) {
+      $requirements['nosto'] = array(
+        'title' => "Nosto",
+        'value' => $t('Nosto ID is missing'),
+        'description' => $t('Go to !settings and enter your nosto tagging ID.' , array('!settings' => l($t('nosto tagging settings'), 'admin/config/services/nostotagging'))),
+        'severity' => REQUIREMENT_WARNING,
+      );
+    }
+  }
+  return $requirements;
+}
+
+function nosto_blocks_external_dashboard_link(){
+	return "https://my.nosto.com/admin/" . variable_get(COMMERCE_NOSTO_TAGGING_CONFIG_KEY_ACCOUNT_NAME) . "/campaigns/list";
+	
+}
+
+
+function nosto_blocks_get_slot_id_list() 
+{    
+	$list_of_nosto_slot_ids = variable_get('nosto_block_list', '');
+	return $list_of_nosto_slot_ids ? explode("\n", $list_of_nosto_slot_ids) : array();
+}
+
+function nosto_blocks_block_info() 
+{    
+	foreach(nosto_blocks_get_slot_id_list() as $nosto_slot_id) {
+		// build a lst of 
+		$blocks['nosto_' . $nosto_slot_id] = array(
+			// info: The name of the block.
+			'info' => t('Nosto Slot: ' . $nosto_slot_id),
+		);		
+	}
+
+	return $blocks;
+}
+
+function nosto_blocks_block_view($delta = '') 
+{
+	if (substr($delta, 0, 6) == "nosto_") {
+		// remove nosto_ part of the array 
+		$slot_id = substr($delta, 6);
+
+		//No title
+		$block['subject'] = null;;
+
+		// content should be something like:
+		// <div class="nosto_element" id="recently-viewed"></div> 
+		$block['content'] = '<div class="nosto_element" id="' . $slot_id . '"></div>';
+
+		return $block;
+	}
+	
+}

@@ -1,0 +1,10 @@
+<?php
+
+/**
+ * Implements hook_uninstall().
+ */
+function nosto_blocks_uninstall() {
+
+	// delete configuration variables
+	variable_del('nosto_block_list');
+}

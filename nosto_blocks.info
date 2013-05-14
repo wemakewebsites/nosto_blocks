@@ -1,0 +1,9 @@
+name = Nosto Blocks
+description = Easily create blocks for each of your Nosto recommendation slots
+version = 7.x-1.0-dev
+core = 7.x
+php = 5.0
+package = Shopfront
+configure = admin/config/structure/nostoblocks
+dependencies[] = block
+dependencies[] = commerce_nosto_tagging
