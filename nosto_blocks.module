@@ -113,8 +113,6 @@ function nosto_blocks_block_view($delta = '')
 		// remove nosto_ part of the array 
 		$slot_id = substr($delta, 6);
 
-		print $slot_id;
-
 		$block = array();
 
 		//No title
